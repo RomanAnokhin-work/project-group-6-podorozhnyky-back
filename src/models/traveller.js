@@ -1,0 +1,30 @@
+import mongoose, { Schema } from "mongoose";
+
+const travellerSchema = new mongoose.Schema({
+  img: {
+    type: String,
+  },
+  title: {
+    type: String,
+  },
+  article: {
+    type: String,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+  },
+  ownerId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  date: {
+    type: String,
+  },
+  favoriteCount: {
+    type: Number,
+    default: 0,
+  }
+});
+
+export const Traveller = mongoose.model('Traveller', travellerSchema);

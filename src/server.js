@@ -9,8 +9,7 @@ import { errors } from "celebrate";
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
-
-
+import usersRoutes from './routes/usersRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -21,8 +20,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-
-
+app.use('/api/users', usersRoutes);
 
 
 app.use(notFoundHandler);

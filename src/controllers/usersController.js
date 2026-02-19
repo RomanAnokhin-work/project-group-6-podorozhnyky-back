@@ -19,3 +19,27 @@ export const getAllUsers = async (req, res) => {
 export const getCurrentUser = (req, res) => {
   res.json(req.user);
 };
+
+export const updateCurrentUserController = async (req, res) => {
+  const userId = req.user._id;
+  const { name, description } = req.body;
+  const avatar = req.file;
+  let avatarUrl;
+
+  if (avatar) {
+    avatarUrl = await saveFileToCloudinary(avatar);
+  }
+
+  const updateData = {};
+  if (name) updateData.name = name;
+  if (description) updateData.description = description;
+  if (avatarUrl) updateData.avatarUrl = avatarUrl;
+
+  const updatedUser = await updateUserCurrentService(userId, updateData);
+
+  res.status(200).json({
+    status: 200,
+    message: 'User profile updated successfully',
+    data: updatedUser,
+  });
+};

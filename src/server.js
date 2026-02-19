@@ -15,13 +15,13 @@ const app = express();
 const PORT = process.env.PORT ?? 3000;
 
 app.use(logger);
-app.use(
-  cors());
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/users', usersRoutes);
 
+
+app.use(usersRoutes) 
 
 app.use(notFoundHandler);
 app.use(errors());

@@ -1,9 +1,4 @@
-export const getCurrentUser = (req, res) => {
-  res.json(req.user);
-};
 import { User } from "../models/user.js";
-
-
 
 
 export const getAllUsers = async (req, res) => {
@@ -21,3 +16,6 @@ export const getAllUsers = async (req, res) => {
   res.status(200).json({ page, perPage, totalUser, totalPages, users });
 };
 
+export const getCurrentUser = (req, res) => {
+  res.json(req.user);
+};

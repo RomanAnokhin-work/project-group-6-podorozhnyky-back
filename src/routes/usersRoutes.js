@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { celebrate } from "celebrate";
 import { authenticate } from '../middleware/authenticate.js';
 import { getCurrentUser, getAllUsers } from '../controllers/usersController.js';
-import { getAllUserSchema } from "../validations/userValidatins.js";
+import { getAllUserSchema } from "../validations/userValidation.js";
 
 const router = Router();
 

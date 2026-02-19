@@ -28,6 +28,10 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
+    savedArticles: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Articles',
+    }]
   },
   {
     timestamps: true,

@@ -1,8 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import cors from 'cors';
+import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
@@ -25,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use(authRoutes);
 app.use(storiesRoutes);
 app.use(usersRoutes);
 
@@ -35,8 +33,6 @@ app.use(errors());
 app.use(errorHandler);
 
 // Connect to MongoDB
-console.log('Current working directory =', process.cwd());
-console.log('MONGO_URL =', process.env.MONGO_URL);
 await connectMongoDB();
 
 // Start server

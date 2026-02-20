@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema, model } from 'mongoose';
 
-const travellerSchema = new mongoose.Schema({
+const travellerSchema = new Schema({
   img: {
     type: String,
   },
@@ -24,7 +24,7 @@ const travellerSchema = new mongoose.Schema({
   favoriteCount: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
-export const Traveller = mongoose.model('Traveller', travellerSchema);
+export const Traveller = model('Traveller', travellerSchema);

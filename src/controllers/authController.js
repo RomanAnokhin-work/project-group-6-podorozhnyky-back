@@ -5,7 +5,7 @@ import { createSession, setSessionCookies } from "../services/auth.js";
 
 // Логін
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
   const user = await User.findOne({ email }).select('+password');
   if (!user) return res.status(401).json({ message: "Invalid email or password" });
 
@@ -15,12 +15,12 @@ export const loginUser = async (req, res) => {
   const session = await createSession(user._id);
   setSessionCookies(res, session);
 
-  res.json({ message: "Login successful", user: { _id: user._id, email: user.email } });
+  res.json({ message: "Login successful", user: { _id: user._id, email: user.email, name: user.name } });
 };
 
 // Реєстрація
 export const registerUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
   // Перевірка, чи email вже використовується
   const existingUser = await User.findOne({ email });
@@ -34,6 +34,7 @@ export const registerUser = async (req, res) => {
   // Створюємо нового користувача
   const newUser = await User.create({
     email,
+    name,
     password: hashedPassword,
   });
 
@@ -47,6 +48,7 @@ export const registerUser = async (req, res) => {
     user: {
       _id: newUser._id,
       email: newUser.email,
+      name: newUser.name,
     },
   });
 };

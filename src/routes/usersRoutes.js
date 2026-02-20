@@ -7,10 +7,9 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { upload } from '../middleware/upload.js';
 
-const router = Router();
 const usersRouter = Router();
-router.get('/me', authenticate, getCurrentUser);
-router.get('/users', celebrate(getAllUserSchema), getAllUsers);
+usersRouter.get('/me', authenticate, getCurrentUser);
+usersRouter.get('/users', celebrate(getAllUserSchema), getAllUsers);
 
 usersRouter.patch(
   '/me',
@@ -20,5 +19,4 @@ usersRouter.patch(
   ctrlWrapper(updateCurrentUserController),
 );
 
-export default router;
-
+export default usersRouter;

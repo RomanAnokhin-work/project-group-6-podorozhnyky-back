@@ -1,15 +1,18 @@
-import { User } from "../models/user.js";
-
+import { User } from '../models/user.js';
+import { Traveller } from '../models/traveller.js';
+import { saveFileToCloudinary } from '../services/cloudinaryService.js';
+import { updateUserCurrentService } from '../services/userService.js';
+import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 
 export const getAllUsers = async (req, res) => {
-
   const { page = 1, perPage = 10 } = req.query;
   const skip = (page - 1) * perPage;
   const usersQuery = User.find();
 
   const [totalUser, users] = await Promise.all([
     usersQuery.clone().countDocuments(),
-    usersQuery.skip(skip).limit(perPage)
+    usersQuery.skip(skip).limit(perPage),
   ]);
   const totalPages = Math.ceil(totalUser / perPage);
 
@@ -42,4 +45,24 @@ export const updateCurrentUserController = async (req, res) => {
     message: 'User profile updated successfully',
     data: updatedUser,
   });
+};
+
+export const getUserById = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw createHttpError(400, 'Invalid user ID');
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const articles = await Traveller.find({ ownerId: userId })
+    .sort({
+      createdAt: -1,
+    })
+    .populate('ownerId', 'name avatarUrl');
+  res.status(200).json({ user, articles });
 };

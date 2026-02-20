@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
 
 import storiesRoutes from './routes/storiesRoutes.js';
+import usersRoutes from './routes/usersRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(storiesRoutes);
+app.use(usersRoutes);
 
 app.use(notFoundHandler);
 app.use(errors());

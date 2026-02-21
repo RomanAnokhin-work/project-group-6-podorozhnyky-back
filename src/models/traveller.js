@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+﻿import { Schema, model } from 'mongoose';
 
 const travellerSchema = new Schema({
   img: {
@@ -25,6 +25,7 @@ const travellerSchema = new Schema({
     type: Number,
     default: 0,
   },
-});
+}, { versionKey: false });
 
 export const Traveller = model('Traveller', travellerSchema);
+

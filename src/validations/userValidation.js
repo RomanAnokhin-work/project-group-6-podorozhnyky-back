@@ -1,5 +1,5 @@
 import { Joi, Segments } from 'celebrate';
-
+import { isValidObjectId } from 'mongoose';
 
 export const getAllUserSchema = {
   [Segments.QUERY]: Joi.object({
@@ -13,3 +13,13 @@ export const updateUserSchema = Joi.object({
   avatarUrl: Joi.string().optional(),
   description: Joi.string().max(150).optional(),
 }).min(1);
+
+const objectIdValidator = (value, helpers) => {
+  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
+};
+
+export const updateSavedArticlesSchema = Joi.object({
+  [Segments.BODY]: Joi.object({
+    articleId: Joi.string().custom(objectIdValidator).required(),
+  }),
+});

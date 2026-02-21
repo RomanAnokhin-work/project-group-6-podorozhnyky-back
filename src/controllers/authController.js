@@ -2,6 +2,7 @@ import createHttpError from "http-errors";
 import { User } from "../models/user.js";
 import bcrypt from "bcrypt";
 import { createSession, setSessionCookies } from "../services/auth.js";
+import { Session } from '../models/session.js';
 
 // Логін
 export const loginUser = async (req, res) => {
@@ -55,7 +56,15 @@ export const registerUser = async (req, res) => {
 
 // Вихід
 export const logoutUser = async (req, res) => {
-  const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: null });
+  const { sessionId } = req.cookies;
+
+  if (sessionId) {
+    await Session.deleteOne({ _id: sessionId });
+  }
+
+  res.clearCookie('sessionId');
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+
   res.status(204).send();
-  };
+};

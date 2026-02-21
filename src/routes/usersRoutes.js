@@ -5,6 +5,7 @@ import {
   getCurrentUser,
   getAllUsers,
   updateCurrentUserController,
+  getUserById,
   addArticleToSaved,
   removeArticleFromSaved,
 } from '../controllers/usersController.js';
@@ -12,14 +13,20 @@ import {
   getAllUserSchema,
   updateSavedArticlesSchema,
   updateUserSchema,
+  userIdParamSchema,
 } from '../validations/userValidation.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middleware/validateBody.js';
-// import { upload } from '../middleware/upload.js';
+import { upload } from '../middleware/multer.js';
 
 const usersRouter = Router();
 usersRouter.get('/me', authenticate, getCurrentUser);
 usersRouter.get('/users', celebrate(getAllUserSchema), getAllUsers);
+usersRouter.get(
+  '/users/:userId',
+  celebrate(userIdParamSchema),
+  ctrlWrapper(getUserById),
+);
 
 usersRouter.patch(
   '/me',

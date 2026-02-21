@@ -1,7 +1,11 @@
 import crypto from 'crypto';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
 import { Session } from '../models/session.js';
+import { User } from '../models/user.js';
 
+export const findUserByEmail = async (email) => {
+  return await User.findOne({ email }).select('+password');
+};
 export const createSession = async (userId) => {
   const accessToken = crypto.randomBytes(30).toString('base64');
   const refreshToken = crypto.randomBytes(30).toString('base64');

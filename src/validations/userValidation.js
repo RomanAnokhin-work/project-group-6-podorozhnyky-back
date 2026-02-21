@@ -14,6 +14,7 @@ export const updateUserSchema = Joi.object({
   description: Joi.string().max(150).optional(),
 }).min(1);
 
+// Кастомний валідатор для ObjectI
 const objectIdValidator = (value, helpers) => {
   return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
 };
@@ -23,3 +24,10 @@ export const updateSavedArticlesSchema = Joi.object({
     articleId: Joi.string().custom(objectIdValidator).required(),
   }),
 });
+
+// Схема для перевірки параметра userId
+export const userIdParamSchema = {
+  [Segments.PARAMS]: Joi.object({
+    userId: Joi.string().custom(objectIdValidator).required(),
+  }),
+};

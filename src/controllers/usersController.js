@@ -99,15 +99,32 @@ export const addArticleToSaved = async (req, res) => {
 };
 
 export const removeArticleFromSaved = async (req, res) => {
-  const { userId } = req.cookies;
+  const { articleId } = req.body;
+  const userId = req.user._id;
 
-  const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
-    new: true,
-  });
+  const user = await User.findById(userId);
 
-  if (!user) {
-    throw createHttpError(404, 'Student not found');
+  const isSaved = user.savedArticles.includes(articleId);
+  if (!isSaved) {
+    return res.status(200).json(user);
   }
 
-  res.status(200).json(user);
+  const article = await Traveller.findById(articleId);
+  if (!article) {
+    throw createHttpError(404, 'Article not found!');
+  }
+
+  await Traveller.findByIdAndUpdate(articleId, {
+    $inc: { favoriteCount: -1 },
+  });
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { savedArticles: articleId },
+    },
+    { new: true },
+  );
+
+  res.status(200).json(updatedUser);
 };

@@ -31,7 +31,7 @@ usersRouter.get(
 usersRouter.patch(
   '/me',
   authenticate,
-  //upload.single('avatar'),
+  upload.single('avatar'),
   validateBody(updateUserSchema),
   ctrlWrapper(updateCurrentUserController),
 );

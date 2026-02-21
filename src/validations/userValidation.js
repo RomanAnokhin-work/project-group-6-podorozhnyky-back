@@ -19,11 +19,11 @@ const objectIdValidator = (value, helpers) => {
   return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
 };
 
-export const updateSavedArticlesSchema = Joi.object({
+export const updateSavedArticlesSchema = {
   [Segments.BODY]: Joi.object({
     articleId: Joi.string().custom(objectIdValidator).required(),
   }),
-});
+};
 
 // Схема для перевірки параметра userId
 export const userIdParamSchema = {

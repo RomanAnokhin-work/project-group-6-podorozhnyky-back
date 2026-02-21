@@ -66,3 +66,65 @@ export const getUserById = async (req, res) => {
     .populate('ownerId', 'name avatarUrl');
   res.status(200).json({ user, articles });
 };
+
+export const addArticleToSaved = async (req, res) => {
+  const { articleId } = req.body;
+  const userId = req.user._id;
+
+  const user = await User.findById(userId);
+
+  const alreadySaved = user.savedArticles.includes(articleId);
+
+  if (alreadySaved) {
+    return res.status(200).json(user);
+  }
+
+  const article = await Traveller.findById(articleId);
+
+  if (!article) {
+    throw createHttpError(404, 'Article not found!');
+  }
+
+  await Traveller.findByIdAndUpdate(articleId, {
+    $inc: { favoriteCount: 1 },
+  });
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $addToSet: { savedArticles: articleId } },
+    { new: true },
+  );
+
+  res.status(200).json(updatedUser);
+};
+
+export const removeArticleFromSaved = async (req, res) => {
+  const { articleId } = req.body;
+  const userId = req.user._id;
+
+  const user = await User.findById(userId);
+
+  const isSaved = user.savedArticles.includes(articleId);
+  if (!isSaved) {
+    return res.status(200).json(user);
+  }
+
+  const article = await Traveller.findById(articleId);
+  if (!article) {
+    throw createHttpError(404, 'Article not found!');
+  }
+
+  await Traveller.findByIdAndUpdate(articleId, {
+    $inc: { favoriteCount: -1 },
+  });
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { savedArticles: articleId },
+    },
+    { new: true },
+  );
+
+  res.status(200).json(updatedUser);
+};

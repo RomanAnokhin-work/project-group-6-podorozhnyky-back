@@ -18,7 +18,7 @@ export const getStories = async (req, res) => {
 
   const skip = (page - 1) * perPage;
 
-  const storiesQuery = Traveller.find(filter).populate('category');
+  const storiesQuery = Traveller.find(filter).populate(['category', 'ownerId']);
 
   const [totalItems, stories] = await Promise.all([
     storiesQuery.clone().countDocuments(),

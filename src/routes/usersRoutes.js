@@ -6,9 +6,12 @@ import {
   getAllUsers,
   updateCurrentUserController,
   getUserById,
+  addArticleToSaved,
+  removeArticleFromSaved,
 } from '../controllers/usersController.js';
 import {
   getAllUserSchema,
+  updateSavedArticlesSchema,
   updateUserSchema,
   userIdParamSchema,
 } from '../validations/userValidation.js';
@@ -31,6 +34,20 @@ usersRouter.patch(
   upload.single('avatar'),
   validateBody(updateUserSchema),
   ctrlWrapper(updateCurrentUserController),
+);
+
+usersRouter.patch(
+  '/me/saved-articles',
+  authenticate,
+  celebrate(updateSavedArticlesSchema),
+  addArticleToSaved,
+);
+
+usersRouter.delete(
+  '/me/saved-articles',
+  authenticate,
+  celebrate(updateSavedArticlesSchema),
+  removeArticleFromSaved,
 );
 
 export default usersRouter;

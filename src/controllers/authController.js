@@ -52,3 +52,10 @@ export const registerUser = async (req, res) => {
     },
   });
 };
+
+// Вихід
+export const logoutUser = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: null });
+  res.status(204).send();
+  };

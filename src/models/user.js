@@ -16,6 +16,10 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    token: {
+      type: String,
+      default: null
+    },
     avatarUrl: {
       type: String,
       default: '',

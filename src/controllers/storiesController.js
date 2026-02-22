@@ -116,4 +116,32 @@ export const updateStory = async (req, res) => {
   res.status(200).json(updatedStory);
 };
 
+export const getSavedStoriesController = async (req, res) => {
+  const { page = 1, limit = 9 } = req.query;
+  const userId = req.user._id;
 
+  const user = await User.findById(userId);
+
+  const total = user.savedStories.length;
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const stories = await Story.find({
+    _id: { $in: user.savedStories },
+  })
+    .populate('ownerId', 'name avatarUrl')
+    .populate('category', 'name')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(Number(limit));
+
+  res.status(200).json({
+    data: stories,
+    pagination: {
+      page: Number(page),
+      limit: Number(limit),
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  });
+};

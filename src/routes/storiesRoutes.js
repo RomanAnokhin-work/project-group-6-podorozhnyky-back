@@ -1,11 +1,12 @@
 ﻿import { Router } from 'express';
 import { celebrate } from 'celebrate';
-import { getStories, getOwnStories, createStory, updateStory } from '../controllers/storiesController.js';
+import { getStories, getOwnStories, createStory, updateStory, getSavedStoriesController,} from '../controllers/storiesController.js';
 import {
   getStoriesSchema,
   getOwnStoriesSchema,
   createStorySchema,
   updateStorySchema,
+  paginationQuerySchema,
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
@@ -29,6 +30,13 @@ router.patch(
   upload.single('img'),
   celebrate(updateStorySchema),
   updateStory,
+);
+
+router.get(
+  '/saved',
+  authenticate,
+  celebrate(paginationQuerySchema),
+  getSavedStoriesController,
 );
 
 export default router;

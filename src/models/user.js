@@ -28,10 +28,12 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
-    savedArticles: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Articles',
-    }]
+    savedArticles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Traveller',
+      },
+    ],
   },
   {
     timestamps: true,
@@ -42,7 +44,7 @@ const userSchema = new Schema(
         return ret;
       },
     },
-  }
+  },
 );
 
 export const User = mongoose.model('User', userSchema);

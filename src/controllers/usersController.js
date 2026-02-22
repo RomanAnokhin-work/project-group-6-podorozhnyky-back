@@ -71,29 +71,31 @@ export const addArticleToSaved = async (req, res) => {
   const { articleId } = req.body;
   const userId = req.user._id;
 
-  const user = await User.findById(userId);
+  const articleExists = await Traveller.exists({ _id: articleId });
 
-  const alreadySaved = user.savedArticles.includes(articleId);
-
-  if (alreadySaved) {
-    return res.status(200).json(user);
+  if (!articleExists) {
+    throw createHttpError(404, 'Article not found!');
   }
 
-  const article = await Traveller.findById(articleId);
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      savedArticles: { $ne: articleId },
+    },
+    {
+      $addToSet: { savedArticles: articleId },
+    },
+    { new: true },
+  ).populate('savedArticles');
 
-  if (!article) {
-    throw createHttpError(404, 'Article not found!');
+  if (!updatedUser) {
+    const user = await User.findById(userId).populate('savedArticles');
+    return res.status(200).json(user);
   }
 
   await Traveller.findByIdAndUpdate(articleId, {
     $inc: { favoriteCount: 1 },
   });
-
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { $addToSet: { savedArticles: articleId } },
-    { new: true },
-  );
 
   res.status(200).json(updatedUser);
 };
@@ -102,29 +104,25 @@ export const removeArticleFromSaved = async (req, res) => {
   const { articleId } = req.body;
   const userId = req.user._id;
 
-  const user = await User.findById(userId);
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      savedArticles: articleId,
+    },
+    {
+      $pull: { savedArticles: articleId },
+    },
+    { new: true },
+  ).populate('savedArticles');
 
-  const isSaved = user.savedArticles.includes(articleId);
-  if (!isSaved) {
+  if (!updatedUser) {
+    const user = await User.findById(userId).populate('savedArticles');
     return res.status(200).json(user);
-  }
-
-  const article = await Traveller.findById(articleId);
-  if (!article) {
-    throw createHttpError(404, 'Article not found!');
   }
 
   await Traveller.findByIdAndUpdate(articleId, {
     $inc: { favoriteCount: -1 },
   });
-
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    {
-      $pull: { savedArticles: articleId },
-    },
-    { new: true },
-  );
 
   res.status(200).json(updatedUser);
 };

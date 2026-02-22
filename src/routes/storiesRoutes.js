@@ -33,7 +33,7 @@ router.patch(
 );
 
 router.get(
-  '/saved',
+  '/stories/saved',
   authenticate,
   celebrate(paginationQuerySchema),
   getSavedStoriesController,

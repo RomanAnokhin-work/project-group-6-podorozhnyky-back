@@ -2,6 +2,7 @@
 import { Category } from '../models/category.js';
 import { Traveller } from '../models/traveller.js';
 import { saveFileToCloudinary } from '../services/cloudinaryService.js';
+import { User } from '../models/user.js';
 
 export const getStories = async (req, res) => {
   const { page = 1, perPage = 10, category } = req.query;
@@ -122,12 +123,12 @@ export const getSavedStoriesController = async (req, res) => {
 
   const user = await User.findById(userId);
 
-  const total = user.savedStories.length;
+  const total = user.savedArticles.length;
 
   const skip = (Number(page) - 1) * Number(limit);
 
-  const stories = await Story.find({
-    _id: { $in: user.savedStories },
+  const stories = await Traveller.find({
+    _id: { $in: user.savedArticles },
   })
     .populate('ownerId', 'name avatarUrl')
     .populate('category', 'name')

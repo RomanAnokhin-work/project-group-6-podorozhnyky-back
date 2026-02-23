@@ -31,9 +31,26 @@ const userSchema = new Schema(
     savedArticles: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Story',
+        ref: 'Articles',
       },
     ],
+    isVerified: {
+      type: Boolean,
+      default: true,
+    },
+    pendingEmail: {
+      type: String,
+      default: null,
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    verificationTokenExpires: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

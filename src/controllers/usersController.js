@@ -2,6 +2,11 @@ import { User } from '../models/user.js';
 import { Story } from '../models/story.js';
 import { saveFileToCloudinary } from '../services/cloudinaryService.js';
 import { updateUserCurrentService } from '../services/userService.js';
+import {
+  generateVerificationToken,
+  sendVerificationEmail,
+  verifyEmailToken,
+} from '../verification/userVerification.js';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 
@@ -28,6 +33,7 @@ export const updateCurrentUserController = async (req, res) => {
   const { name, description } = req.body;
   const avatar = req.file;
   let avatarUrl;
+  const { email } = req.body;
 
   if (avatar) {
     avatarUrl = await saveFileToCloudinary(avatar);
@@ -38,12 +44,39 @@ export const updateCurrentUserController = async (req, res) => {
   if (description) updateData.description = description;
   if (avatarUrl) updateData.avatarUrl = avatarUrl;
 
-  const updatedUser = await updateUserCurrentService(userId, updateData);
+  // Handle email change: create pendingEmail + send verification link
+  if (email && email !== req.user.email) {
+    // Check if email already exists
+    const existing = await User.findOne({ email });
+    if (existing) {
+      throw createHttpError(409, 'Email already in use');
+    }
+
+    const token = generateVerificationToken();
+    const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+
+    // Save pending fields directly on user
+    const user = await User.findById(userId).select(
+      '+verificationToken verificationTokenExpires',
+    );
+    user.pendingEmail = email;
+    user.verificationToken = token;
+    user.verificationTokenExpires = expires;
+    user.isVerified = false;
+    await user.save();
+
+    // Send verification email to the new address
+    await sendVerificationEmail(email, token);
+  }
+
+  await updateUserCurrentService(userId, updateData);
+
+  const finalUser = await User.findById(userId);
 
   res.status(200).json({
     status: 200,
     message: 'User profile updated successfully',
-    data: updatedUser,
+    data: finalUser,
   });
 };
 
@@ -67,6 +100,14 @@ export const getUserById = async (req, res) => {
   res.status(200).json({ user, articles });
 };
 
+export const verifyEmailController = async (req, res) => {
+  const { token } = req.query;
+  if (!token) throw createHttpError(400, 'Token is required');
+
+  const user = await verifyEmailToken(token);
+  if (!user) throw createHttpError(400, 'Invalid or expired token');
+
+  res.status(200).json({ message: 'Email verified successfully', user });
 export const addArticleToSaved = async (req, res) => {
   const { articleId } = req.body;
   const userId = req.user._id;

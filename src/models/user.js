@@ -28,10 +28,29 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
-    savedArticles: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Articles',
-    }]
+    savedArticles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Articles',
+      },
+    ],
+    isVerified: {
+      type: Boolean,
+      default: true,
+    },
+    pendingEmail: {
+      type: String,
+      default: null,
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    verificationTokenExpires: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -42,7 +61,7 @@ const userSchema = new Schema(
         return ret;
       },
     },
-  }
+  },
 );
 
 export const User = mongoose.model('User', userSchema);

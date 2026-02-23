@@ -6,12 +6,14 @@ import {
   getAllUsers,
   updateCurrentUserController,
   getUserById,
+  verifyEmailController,
 } from '../controllers/usersController.js';
 import {
   getAllUserSchema,
   updateUserSchema,
   userIdParamSchema,
 } from '../validations/userValidation.js';
+import { emailVerificationSchema } from '../validations/userValidation.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { upload } from '../middleware/multer.js';
@@ -31,6 +33,12 @@ usersRouter.patch(
   upload.single('avatar'),
   validateBody(updateUserSchema),
   ctrlWrapper(updateCurrentUserController),
+);
+
+usersRouter.get(
+  '/users/verify-email',
+  celebrate(emailVerificationSchema),
+  ctrlWrapper(verifyEmailController),
 );
 
 export default usersRouter;

@@ -11,8 +11,15 @@ export const getAllUserSchema = {
 export const updateUserSchema = Joi.object({
   name: Joi.string().max(32).optional(),
   avatarUrl: Joi.string().optional(),
+  email: Joi.string().email().optional(),
   description: Joi.string().max(150).optional(),
 }).min(1);
+
+export const emailVerificationSchema = {
+  [Segments.QUERY]: Joi.object({
+    token: Joi.string().required(),
+  }),
+};
 
 // Кастомний валідатор для ObjectI
 const objectIdValidator = (value, helpers) => {

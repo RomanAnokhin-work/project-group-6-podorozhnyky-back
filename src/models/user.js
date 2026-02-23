@@ -31,7 +31,7 @@ const userSchema = new Schema(
     savedArticles: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Articles',
+        ref: 'Story',
       },
     ],
     isVerified: {

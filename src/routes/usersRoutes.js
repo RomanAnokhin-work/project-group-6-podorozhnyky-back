@@ -42,6 +42,8 @@ usersRouter.get(
   '/users/verify-email',
   celebrate(emailVerificationSchema),
   ctrlWrapper(verifyEmailController),
+);
+
 usersRouter.patch(
   '/me/saved-articles',
   authenticate,

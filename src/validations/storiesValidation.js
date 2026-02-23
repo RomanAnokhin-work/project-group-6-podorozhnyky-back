@@ -38,3 +38,10 @@ export const updateStorySchema = {
     storyId: Joi.string().custom(objectIdValidator).required(),
   }),
 };
+
+export const paginationQuerySchema = {
+  [Segments.QUERY]: Joi.object({
+    page: Joi.number().min(1).default(1),
+    limit: Joi.number().min(1).max(50).default(9),
+  }),
+};

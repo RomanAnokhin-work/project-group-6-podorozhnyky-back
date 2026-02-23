@@ -12,6 +12,7 @@ import { logger } from './middleware/logger.js';
 import storiesRoutes from './routes/storiesRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import categoryRouter from './routes/categoryRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(authRoutes);
 app.use(storiesRoutes);
 app.use(usersRoutes);
+app.use(categoryRouter);
 
 // Error handling
 app.use(notFoundHandler);

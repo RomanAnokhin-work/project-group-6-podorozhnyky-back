@@ -7,9 +7,12 @@ import {
   updateCurrentUserController,
   getUserById,
   verifyEmailController,
+  addArticleToSaved,
+  removeArticleFromSaved,
 } from '../controllers/usersController.js';
 import {
   getAllUserSchema,
+  updateSavedArticlesSchema,
   updateUserSchema,
   userIdParamSchema,
 } from '../validations/userValidation.js';
@@ -39,6 +42,18 @@ usersRouter.get(
   '/users/verify-email',
   celebrate(emailVerificationSchema),
   ctrlWrapper(verifyEmailController),
+usersRouter.patch(
+  '/me/saved-articles',
+  authenticate,
+  celebrate(updateSavedArticlesSchema),
+  addArticleToSaved,
+);
+
+usersRouter.delete(
+  '/me/saved-articles',
+  authenticate,
+  celebrate(updateSavedArticlesSchema),
+  removeArticleFromSaved,
 );
 
 export default usersRouter;

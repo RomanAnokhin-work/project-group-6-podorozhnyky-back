@@ -108,6 +108,8 @@ export const verifyEmailController = async (req, res) => {
   if (!user) throw createHttpError(400, 'Invalid or expired token');
 
   res.status(200).json({ message: 'Email verified successfully', user });
+};
+
 export const addArticleToSaved = async (req, res) => {
   const { articleId } = req.body;
   const userId = req.user._id;

@@ -1,5 +1,5 @@
 import { User } from '../models/user.js';
-import { Traveller } from '../models/traveller.js';
+import { Story } from '../models/story.js';
 import { saveFileToCloudinary } from '../services/cloudinaryService.js';
 import { updateUserCurrentService } from '../services/userService.js';
 import createHttpError from 'http-errors';
@@ -59,7 +59,7 @@ export const getUserById = async (req, res) => {
     throw createHttpError(404, 'User not found');
   }
 
-  const articles = await Traveller.find({ ownerId: userId })
+  const articles = await Story.find({ ownerId: userId })
     .sort({
       createdAt: -1,
     })
@@ -71,7 +71,7 @@ export const addArticleToSaved = async (req, res) => {
   const { articleId } = req.body;
   const userId = req.user._id;
 
-  const articleExists = await Traveller.exists({ _id: articleId });
+  const articleExists = await Story.exists({ _id: articleId });
 
   if (!articleExists) {
     throw createHttpError(404, 'Article not found!');
@@ -93,7 +93,7 @@ export const addArticleToSaved = async (req, res) => {
     return res.status(200).json(user);
   }
 
-  await Traveller.findByIdAndUpdate(articleId, {
+  await Story.findByIdAndUpdate(articleId, {
     $inc: { favoriteCount: 1 },
   });
 
@@ -120,7 +120,7 @@ export const removeArticleFromSaved = async (req, res) => {
     return res.status(200).json(user);
   }
 
-  await Traveller.findByIdAndUpdate(articleId, {
+  await Story.findByIdAndUpdate(articleId, {
     $inc: { favoriteCount: -1 },
   });
 

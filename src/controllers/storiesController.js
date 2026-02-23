@@ -1,6 +1,6 @@
 ﻿import createHttpError from 'http-errors';
 import { Category } from '../models/category.js';
-import { Traveller } from '../models/traveller.js';
+import { Story } from '../models/story.js';
 import { saveFileToCloudinary } from '../services/cloudinaryService.js';
 import { User } from '../models/user.js';
 
@@ -19,7 +19,7 @@ export const getStories = async (req, res) => {
 
   const skip = (page - 1) * perPage;
 
-  const storiesQuery = Traveller.find(filter).populate(['category', 'ownerId']);
+  const storiesQuery = Story.find(filter).populate(['category', 'ownerId']);
 
   const [totalItems, stories] = await Promise.all([
     storiesQuery.clone().countDocuments(),
@@ -42,7 +42,7 @@ export const getOwnStories = async (req, res) => {
   const skip = (Number(page) - 1) * Number(perPage);
 
   const filter = { ownerId: req.user._id };
-  const storiesQuery = Traveller.find(filter).populate('category');
+  const storiesQuery = Story.find(filter).populate('category');
 
   const [totalItems, stories] = await Promise.all([
     storiesQuery.clone().countDocuments(),
@@ -76,7 +76,7 @@ export const createStory = async (req, res) => {
     throw createHttpError(404, 'No such category');
   }
 
-  const story = await Traveller.create({
+  const story = await Story.create({
     title,
     article,
     img: imgUrl,
@@ -104,7 +104,7 @@ export const updateStory = async (req, res) => {
     updateData.img = uploadResult.secure_url;
   }
 
-  const updatedStory = await Traveller.findByIdAndUpdate(
+  const updatedStory = await Story.findByIdAndUpdate(
     storyId,
     updateData,
     { new: true },
@@ -127,7 +127,7 @@ export const getSavedStoriesController = async (req, res) => {
 
   const skip = (Number(page) - 1) * Number(limit);
 
-  const stories = await Traveller.find({
+  const stories = await Story.find({
     _id: { $in: user.savedArticles },
   })
     .populate('ownerId', 'name avatarUrl')

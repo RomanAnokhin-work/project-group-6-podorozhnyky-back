@@ -22,7 +22,7 @@ import { validateBody } from '../middleware/validateBody.js';
 import { upload } from '../middleware/multer.js';
 
 const usersRouter = Router();
-usersRouter.get('/me', authenticate, getCurrentUser);
+usersRouter.get('/users/me', authenticate, getCurrentUser);
 usersRouter.get('/users', celebrate(getAllUserSchema), getAllUsers);
 usersRouter.get(
   '/users/:userId',
@@ -45,14 +45,14 @@ usersRouter.get(
 );
 
 usersRouter.patch(
-  '/me/saved-articles',
+  '/users/me/saved-articles',
   authenticate,
   celebrate(updateSavedArticlesSchema),
   addArticleToSaved,
 );
 
 usersRouter.delete(
-  '/me/saved-articles',
+  '/users/me/saved-articles',
   authenticate,
   celebrate(updateSavedArticlesSchema),
   removeArticleFromSaved,

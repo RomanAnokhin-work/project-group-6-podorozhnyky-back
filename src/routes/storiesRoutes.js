@@ -42,14 +42,14 @@ storiesRouter.get(
 );
 
 storiesRouter.patch(
-  '/stories/:storyId/saved',
+  '/stories/saved',
   authenticate,
   celebrate(updateSavedArticlesSchema),
   addArticleToSaved,
 );
 
 storiesRouter.delete(
-  '/stories/:storyId/saved',
+  '/stories/saved',
   authenticate,
   celebrate(updateSavedArticlesSchema),
   removeArticleFromSaved,

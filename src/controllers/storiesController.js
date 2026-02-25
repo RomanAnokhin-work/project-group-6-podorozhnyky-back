@@ -146,3 +146,61 @@ export const getSavedStoriesController = async (req, res) => {
     },
   });
 };
+export const addArticleToSaved = async (req, res) => {
+  const { articleId } = req.body;
+  const userId = req.user._id;
+
+  const articleExists = await Story.exists({ _id: articleId });
+
+  if (!articleExists) {
+    throw createHttpError(404, 'Article not found!');
+  }
+
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      savedArticles: { $ne: articleId },
+    },
+    {
+      $addToSet: { savedArticles: articleId },
+    },
+    { new: true },
+  ).populate('savedArticles');
+
+  if (!updatedUser) {
+    const user = await User.findById(userId).populate('savedArticles');
+    return res.status(200).json(user);
+  }
+
+  await Story.findByIdAndUpdate(articleId, {
+    $inc: { favoriteCount: 1 },
+  });
+
+  res.status(200).json(updatedUser);
+};
+export const removeArticleFromSaved = async (req, res) => {
+  const { articleId } = req.body;
+  const userId = req.user._id;
+
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      savedArticles: articleId,
+    },
+    {
+      $pull: { savedArticles: articleId },
+    },
+    { new: true },
+  ).populate('savedArticles');
+
+  if (!updatedUser) {
+    const user = await User.findById(userId).populate('savedArticles');
+    return res.status(200).json(user);
+  }
+
+  await Story.findByIdAndUpdate(articleId, {
+    $inc: { favoriteCount: -1 },
+  });
+
+  res.status(200).json(updatedUser);
+};

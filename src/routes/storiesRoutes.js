@@ -1,22 +1,24 @@
 ﻿import { Router } from 'express';
 import { celebrate } from 'celebrate';
-import { getStories, getOwnStories, createStory, updateStory, getSavedStoriesController,} from '../controllers/storiesController.js';
+import { getStories, getOwnStories, createStory, updateStory, getSavedStoriesController,addArticleToSaved,
+  removeArticleFromSaved,} from '../controllers/storiesController.js';
 import {
   getStoriesSchema,
   getOwnStoriesSchema,
   createStorySchema,
   updateStorySchema,
   paginationQuerySchema,
+  updateSavedArticlesSchema,
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 
-const router = Router();
+const storiesRouter = Router();
 
-router.get('/stories', celebrate(getStoriesSchema), getStories);
-router.get('/stories/own', authenticate, celebrate(getOwnStoriesSchema), getOwnStories);
+storiesRouter.get('/stories', celebrate(getStoriesSchema), getStories);
+storiesRouter.get('/stories/own', authenticate, celebrate(getOwnStoriesSchema), getOwnStories);
 
-router.post(
+storiesRouter.post(
   '/stories',
   authenticate,
   upload.single('img'),
@@ -24,7 +26,7 @@ router.post(
   createStory,
 );
 
-router.patch(
+storiesRouter.patch(
   '/stories/:storyId',
   authenticate,
   upload.single('img'),
@@ -32,11 +34,25 @@ router.patch(
   updateStory,
 );
 
-router.get(
+storiesRouter.get(
   '/stories/saved',
   authenticate,
   celebrate(paginationQuerySchema),
   getSavedStoriesController,
 );
 
-export default router;
+storiesRouter.patch(
+  '/stories/:storyId/saved',
+  authenticate,
+  celebrate(updateSavedArticlesSchema),
+  addArticleToSaved,
+);
+
+storiesRouter.delete(
+  '/stories/:storyId/saved',
+  authenticate,
+  celebrate(updateSavedArticlesSchema),
+  removeArticleFromSaved,
+);
+
+export default storiesRouter;

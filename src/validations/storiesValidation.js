@@ -45,3 +45,8 @@ export const paginationQuerySchema = {
     limit: Joi.number().min(1).max(50).default(9),
   }),
 };
+export const updateSavedArticlesSchema = {
+  [Segments.BODY]: Joi.object({
+    articleId: Joi.string().custom(objectIdValidator).required(),
+  }),
+};

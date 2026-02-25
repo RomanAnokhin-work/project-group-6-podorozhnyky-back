@@ -31,7 +31,7 @@ usersRouter.get(
 );
 
 usersRouter.patch(
-  '/me',
+  '/users/me',
   authenticate,
   upload.single('avatar'),
   validateBody(updateUserSchema),

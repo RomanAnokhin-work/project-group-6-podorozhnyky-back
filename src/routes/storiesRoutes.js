@@ -1,7 +1,15 @@
 ﻿import { Router } from 'express';
 import { celebrate } from 'celebrate';
-import { getStories, getOwnStories, createStory, updateStory, getSavedStoriesController,addArticleToSaved,
-  removeArticleFromSaved,} from '../controllers/storiesController.js';
+import {
+  getStories,
+  getOwnStories,
+  createStory,
+  updateStory,
+  getSavedStoriesController,
+  addArticleToSaved,
+  removeArticleFromSaved,
+  getPopularStories,
+} from '../controllers/storiesController.js';
 import {
   getStoriesSchema,
   getOwnStoriesSchema,
@@ -9,14 +17,25 @@ import {
   updateStorySchema,
   paginationQuerySchema,
   updateSavedArticlesSchema,
+  getPopularStoriesSchema,
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 
 const storiesRouter = Router();
+storiesRouter.get(
+  '/stories/popular',
+  celebrate(getPopularStoriesSchema),
+  getPopularStories,
+);
 
 storiesRouter.get('/stories', celebrate(getStoriesSchema), getStories);
-storiesRouter.get('/stories/own', authenticate, celebrate(getOwnStoriesSchema), getOwnStories);
+storiesRouter.get(
+  '/stories/own',
+  authenticate,
+  celebrate(getOwnStoriesSchema),
+  getOwnStories,
+);
 
 storiesRouter.post(
   '/stories',

@@ -19,14 +19,22 @@ import { validateBody } from '../middleware/validateBody.js';
 import { upload } from '../middleware/multer.js';
 
 const usersRouter = Router();
-usersRouter.get('/users/me', authenticate, getCurrentUser);
+
+//ПУБЛІЧНИЙ ендпоінт на ОТРИМАННЯ даних про користувачів(авторів) + пагінація
 usersRouter.get('/users', celebrate(getAllUserSchema), getAllUsers);
+
+//ПУБЛІЧНИЙ ендпоінт на ОТРИМАННЯ даних про користувача за ID - дані користувача + список статей
 usersRouter.get(
   '/users/:userId',
   celebrate(userIdParamSchema),
   ctrlWrapper(getUserById),
 );
 
+//ПРИВАТНИЙ ендпоінт на ОТРИМАННЯ інформації про поточного користувача
+usersRouter.get('/users/me', authenticate, getCurrentUser);
+
+//ПРИВАТНИЙ ендпоінт для ОНОВЛЕННЯ аватару корситувача
+// ПРИВАТНИЙ ендпоінт для ОНОВЛЕННЯ даних користувача
 usersRouter.patch(
   '/users/me',
   authenticate,

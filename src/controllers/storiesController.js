@@ -104,11 +104,9 @@ export const updateStory = async (req, res) => {
     updateData.img = uploadResult.secure_url;
   }
 
-  const updatedStory = await Story.findByIdAndUpdate(
-    storyId,
-    updateData,
-    { new: true },
-  );
+  const updatedStory = await Story.findByIdAndUpdate(storyId, updateData, {
+    new: true,
+  });
 
   if (!updatedStory) {
     throw createHttpError(404, 'Story not found');
@@ -203,4 +201,50 @@ export const removeArticleFromSaved = async (req, res) => {
   });
 
   res.status(200).json(updatedUser);
+};
+
+export const getPopularStories = async (req, res) => {
+  const { page = 1, perPage = 4, category } = req.query;
+
+  const parsedPage = Number(page);
+  const parsedPerPage = Number(perPage);
+
+  if (Number.isNaN(parsedPage) || parsedPage < 1) {
+    throw createHttpError(400, 'Invalid page');
+  }
+  if (Number.isNaN(parsedPerPage) || parsedPerPage < 1) {
+    throw createHttpError(400, 'Invalid perPage');
+  }
+
+  const safePerPage = Math.min(parsedPerPage, 20);
+  const skip = (parsedPage - 1) * safePerPage;
+
+  const filter = {};
+
+  if (category) {
+    const foundCategory = await Category.findOne({ name: category });
+    if (!foundCategory) {
+      throw createHttpError(404, 'No such category');
+    }
+    filter.category = foundCategory._id;
+  }
+
+  const popularQuery = Story.find(filter)
+    .sort({ favoriteCount: -1, createdAt: -1 })
+    .populate(['category', 'ownerId']);
+
+  const [totalItems, stories] = await Promise.all([
+    popularQuery.clone().countDocuments(),
+    popularQuery.skip(skip).limit(safePerPage),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / safePerPage);
+
+  res.status(200).json({
+    page: parsedPage,
+    perPage: safePerPage,
+    totalItems,
+    totalPages,
+    stories,
+  });
 };

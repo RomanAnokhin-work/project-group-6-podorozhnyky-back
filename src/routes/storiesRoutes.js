@@ -22,6 +22,8 @@ import {
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 
+const storiesRouter = Router();
+
 //ПУБЛІЧНИЙ ендпоінт для ОТРИМАННЯ історій + пагінація + фільтрація за категоріями
 storiesRouter.get('/stories', celebrate(getStoriesSchema), getStories);
 
@@ -76,7 +78,6 @@ storiesRouter.patch(
 );
 
 //ПУБЛІЧНИЙ ендпоінт для ОТРИМАННЯ популярних історій
-const storiesRouter = Router();
 storiesRouter.get(
   '/stories/popular',
   celebrate(getPopularStoriesSchema),

@@ -11,7 +11,7 @@ import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 
 export const getAllUsers = async (req, res) => {
-  const { page = 1, perPage = 10 } = req.query;
+  const { page ,perPage} = req.query;
   const skip = (page - 1) * perPage;
   const usersQuery = User.find();
 

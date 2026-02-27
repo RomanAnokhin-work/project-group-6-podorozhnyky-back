@@ -20,12 +20,13 @@ import { upload } from '../middleware/multer.js';
 
 const usersRouter = Router();
 usersRouter.get('/users/me', authenticate, getCurrentUser);
+
+
+
 usersRouter.get('/users', celebrate(getAllUserSchema), getAllUsers);
-usersRouter.get(
-  '/users/:userId',
-  celebrate(userIdParamSchema),
-  ctrlWrapper(getUserById),
-);
+
+
+usersRouter.get('/users/:userId', celebrate(userIdParamSchema), ctrlWrapper(getUserById));
 
 usersRouter.patch(
   '/users/me',

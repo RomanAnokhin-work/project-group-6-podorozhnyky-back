@@ -15,6 +15,6 @@ authRouter.post('/auth/login', loginUser);
 authRouter.post('/auth/logout', authenticate, logoutUser);
 
 //ПРИВАТНИЙ ендпоінт для оновлення сесії користувача
-authRouter.get('/auth/session', authenticate, checkSession);
+authRouter.get('/auth/session', checkSession);
 
 export default authRouter;

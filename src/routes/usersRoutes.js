@@ -7,6 +7,7 @@ import {
   updateCurrentUserController,
   getUserById,
   verifyEmailController,
+  getPopularUsers,
 } from '../controllers/usersController.js';
 import {
   getAllUserSchema,
@@ -22,6 +23,9 @@ const usersRouter = Router();
 
 //ПУБЛІЧНИЙ ендпоінт на ОТРИМАННЯ даних про користувачів(авторів) + пагінація
 usersRouter.get('/users', celebrate(getAllUserSchema), getAllUsers);
+
+// ПУБЛІЧНИЙ ендпоінт на ОТРИМАННЯ ТОП-4 популярних мандрівників
+usersRouter.get('/users/popular-users', getPopularUsers);
 
 //ПРИВАТНИЙ ендпоінт на ОТРИМАННЯ інформації про поточного користувача
 usersRouter.get('/users/me', authenticate, getCurrentUser);

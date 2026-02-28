@@ -169,3 +169,12 @@ export const removeArticleFromSaved = async (req, res) => {
 
   res.status(200).json(updatedUser);
 };
+
+export const getPopularUsers = async (req, res) => {
+  const users = await User.find()
+    .sort({ articlesAmount: -1 })
+    .limit(4)
+    .select('name avatarUrl description articlesAmount');
+
+  res.status(200).json({ users });
+};

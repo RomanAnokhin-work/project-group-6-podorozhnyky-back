@@ -3,6 +3,8 @@ import { Category } from '../models/category.js';
 import { Story } from '../models/story.js';
 import { saveFileToCloudinary } from '../services/cloudinaryService.js';
 import { User } from '../models/user.js';
+import { getStoryByIdService } from '../services/stories.js';
+
 
 export const getStories = async (req, res) => {
   const { page = 1, perPage = 10, category } = req.query;
@@ -249,14 +251,30 @@ export const getPopularStories = async (req, res) => {
   });
 };
 
-export const getStoryById = async (req, res) => {
-  const { storyId } = req.params;
+export const getStoryByIdController = async (req, res) => {
+  try {
+    const { storyId } = req.params;
 
-  const story = await Story.findById(storyId);
+    const story = await getStoryByIdService(storyId);
 
-  if (!story) {
-    throw createHttpError(404, 'Story not found');
+    if (!story) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Story not found',
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Successfully found story!',
+      data: story,
+    });
+  } catch (error) {
+    console.error('Get story by ID error:', error);
+
+    return res.status(500).json({
+      status: 500,
+      message: 'Internal server error',
+    });
   }
-
-  res.status(200).json(story);
 };

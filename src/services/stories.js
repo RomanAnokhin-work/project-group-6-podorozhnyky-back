@@ -1,4 +1,4 @@
-import { Story } from '../db/models/story.js';
+import { Story } from '../models/story.js';
 
 
 

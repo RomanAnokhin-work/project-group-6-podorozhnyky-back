@@ -13,10 +13,13 @@ export const loginUser = async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
 
-  const session = await createSession(user._id);
-  setSessionCookies(res, session);
+  await Session.deleteOne({ userId: user._id });
 
-  res.json({ message: "Login successful", user: { _id: user._id, email: user.email, name: user.name } });
+  const newSession = await createSession(user._id);
+
+  setSessionCookies(res, newSession);
+
+  res.status(200).json(user);
 };
 
 // Реєстрація

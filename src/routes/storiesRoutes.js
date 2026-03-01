@@ -9,6 +9,7 @@ import {
   addArticleToSaved,
   removeArticleFromSaved,
   getPopularStories,
+  getStoryById
 } from '../controllers/storiesController.js';
 import {
   getStoriesSchema,
@@ -67,6 +68,8 @@ storiesRouter.post(
   celebrate(createStorySchema),
   createStory,
 );
+//ПРИВАТНИЙ ендпоінт для СТВОРЕННЯ історії
+storiesRouter.get('/stories/:storyId', authenticate, getStoryById);
 
 //ПРИВАТНИЙ ендпоінт для РЕДАГУВАННЯ історії
 storiesRouter.patch(

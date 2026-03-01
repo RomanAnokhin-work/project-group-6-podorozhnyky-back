@@ -6,7 +6,7 @@ import { Session } from '../models/session.js';
 
 // Логін
 export const loginUser = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email }).select('+password');
   if (!user) return res.status(401).json({ message: "Invalid email or password" });
 
@@ -47,14 +47,7 @@ export const registerUser = async (req, res) => {
   setSessionCookies(res, session);
 
   // Відправляємо відповідь
-  res.status(201).json({
-    message: "Registration successful",
-    user: {
-      _id: newUser._id,
-      email: newUser.email,
-      name: newUser.name,
-    },
-  });
+  res.status(201).json(newUser);
 };
 
 // Вихід

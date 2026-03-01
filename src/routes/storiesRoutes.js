@@ -8,7 +8,7 @@ import {
   getSavedStoriesController,
   addArticleToSaved,
   removeArticleFromSaved,
-  getPopularStories,
+  getPopularStories,getStoryByIdController,
 } from '../controllers/storiesController.js';
 import {
   getStoriesSchema,
@@ -67,7 +67,8 @@ storiesRouter.post(
   celebrate(createStorySchema),
   createStory,
 );
-
+//ПУБЛІЧНИЙ ендпоінт для ОТРИМАННЯ історії за ID
+storiesRouter.get('/stories/:storyId', getStoryByIdController);
 //ПРИВАТНИЙ ендпоінт для РЕДАГУВАННЯ історії
 storiesRouter.patch(
   '/stories/:storyId',

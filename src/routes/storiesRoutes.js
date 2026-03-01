@@ -67,8 +67,7 @@ storiesRouter.post(
   celebrate(createStorySchema),
   createStory,
 );
-//ПУБЛІЧНИЙ ендпоінт для ОТРИМАННЯ історії за ID
-storiesRouter.get('/stories/:storyId', getStoryByIdController);
+
 //ПРИВАТНИЙ ендпоінт для РЕДАГУВАННЯ історії
 storiesRouter.patch(
   '/stories/:storyId',
@@ -84,5 +83,8 @@ storiesRouter.get(
   celebrate(getPopularStoriesSchema),
   getPopularStories,
 );
+
+//ПУБЛІЧНИЙ ендпоінт для ОТРИМАННЯ історії за ID
+storiesRouter.get('/stories/:storyId', getStoryByIdController);
 
 export default storiesRouter;

@@ -95,34 +95,32 @@ export const refreshUserSession = async (req, res, next) => {
   });
 };
 
-export const checkSession = async (req, res) => {
-  const { sessionId, refreshToken } = req.cookies;
-
-  if (!sessionId || !refreshToken) {
-    return res.status(200).json({ success: false });
-  }
-
-  const session = await Session.findOne({
-    _id: sessionId,
-    refreshToken,
+export const checkSession = async (req, res, next) => {
+   const session = await Session.findOne({
+    _id: req.cookies.sessionId,
+    refreshToken: req.cookies.refreshToken,
   });
 
   if (!session) {
-    return res.status(200).json({ success: false });
+    return next(createHttpError(401, 'Session not found'));
   }
 
-  const isExpired =
+  const isSessionTokenExpired =
     new Date() > new Date(session.refreshTokenValidUntil);
 
-  if (isExpired) {
-    await Session.deleteOne({ _id: sessionId });
-    return res.status(200).json({ success: false });
+  if (isSessionTokenExpired) {
+    return next(createHttpError(401, 'Session token expired'));
   }
 
-  await Session.deleteOne({ _id: sessionId });
+  await Session.deleteOne({
+    _id: req.cookies.sessionId,
+    refreshToken: req.cookies.refreshToken,
+  });
 
   const newSession = await createSession(session.userId);
   setSessionCookies(res, newSession);
 
-  return res.status(200).json({ success: true });
+  res.status(200).json({
+    message: 'Session refreshed',
+  });
 };

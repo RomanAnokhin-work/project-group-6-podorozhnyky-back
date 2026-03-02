@@ -31,10 +31,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use(authRoutes);
-app.use(storiesRoutes);
-app.use(usersRoutes);
-app.use(categoryRouter);
+app.use('/api', authRoutes);
+app.use('/api', storiesRoutes);
+app.use('/api', usersRoutes);
+app.use('/api', categoryRouter);
 
 // Error handling
 app.use(notFoundHandler);

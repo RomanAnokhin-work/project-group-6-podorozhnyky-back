@@ -23,6 +23,7 @@ app.use(cors({
     origin: [
           "http://localhost:3000",
     "http://localhost:3001",
+    "https://project-group-6-podorozhnyky-front.vercel.app/"
     ],
     credentials: true,
   }));

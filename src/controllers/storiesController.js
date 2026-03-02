@@ -44,7 +44,9 @@ export const getOwnStories = async (req, res) => {
   const skip = (Number(page) - 1) * Number(perPage);
 
   const filter = { ownerId: req.user._id };
-  const storiesQuery = Story.find(filter).populate('category');
+  const storiesQuery = Story.find(filter)
+    .populate('category')
+    .populate('ownerId', 'name avatarUrl');
 
   const [totalItems, stories] = await Promise.all([
     storiesQuery.clone().countDocuments(),

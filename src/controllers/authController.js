@@ -122,7 +122,5 @@ export const checkSession = async (req, res, next) => {
 
   res.status(200).json({
     message: 'Session refreshed',
-    accessToken: newSession.accessToken,
-    refreshToken: newSession.refreshToken,
   });
 };

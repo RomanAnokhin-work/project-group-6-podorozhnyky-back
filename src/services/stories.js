@@ -12,6 +12,6 @@ import { Story } from '../models/story.js';
 // };
 export const getStoryByIdService = async (storyId) => {
   return await Story.findById(storyId)
-    .populate('ownerId', 'name email')
+    .populate('ownerId', 'name email avatarUrl')
     .populate('category', 'name');
 };

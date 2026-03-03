@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, logoutUser,  checkSession } from '../controllers/authController.js';
+import { registerUser, loginUser, logoutUser, refreshUserSession } from '../controllers/authController.js';
 import { authenticate } from '../middleware/authenticate.js';
 
 
@@ -15,6 +15,6 @@ authRouter.post('/auth/login', loginUser);
 authRouter.post('/auth/logout', authenticate, logoutUser);
 
 //ПРИВАТНИЙ ендпоінт для оновлення сесії користувача
-authRouter.get('/auth/session', checkSession);
+authRouter.post('/auth/session', authenticate, refreshUserSession);
 
 export default authRouter;

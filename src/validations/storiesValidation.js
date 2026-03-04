@@ -25,6 +25,7 @@ export const createStorySchema = {
     title: Joi.string().max(80).required(),
     article: Joi.string().max(2500).required(),
     category: Joi.string().custom(objectIdValidator).required(),
+    description: Joi.string().max(2500).required()
   }),
 };
 

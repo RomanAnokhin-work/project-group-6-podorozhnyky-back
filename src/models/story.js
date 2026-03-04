@@ -15,6 +15,9 @@ const storySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Category',
     },
+    description: {
+      type:String
+    },
     ownerId: {
       type: Schema.Types.ObjectId,
       ref: 'User',

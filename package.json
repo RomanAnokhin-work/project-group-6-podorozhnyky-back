@@ -22,6 +22,7 @@
   "homepage": "https://github.com/RomanAnokhin-work/project-group-6-podorozhnyky-back#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "nodemon": "^3.1.14"

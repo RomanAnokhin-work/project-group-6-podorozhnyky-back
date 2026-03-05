@@ -36,7 +36,8 @@ export const updateCurrentUserController = async (req, res) => {
   const { email } = req.body;
 
   if (avatar) {
-    avatarUrl = await saveFileToCloudinary(avatar);
+     const { secure_url } = await saveFileToCloudinary(avatar.buffer);
+    avatarUrl = secure_url;
   }
 
   const updateData = {};

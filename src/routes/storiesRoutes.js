@@ -9,6 +9,7 @@ import {
   addArticleToSaved,
   removeArticleFromSaved,
   getPopularStories,getStoryByIdController,
+  deleteStoryById,
 } from '../controllers/storiesController.js';
 import {
   getStoriesSchema,
@@ -87,4 +88,5 @@ storiesRouter.get(
 //ПУБЛІЧНИЙ ендпоінт для ОТРИМАННЯ історії за ID
 storiesRouter.get('/stories/:storyId', getStoryByIdController);
 
+storiesRouter.delete('/stories/:storyId', authenticate, deleteStoryById);
 export default storiesRouter;

@@ -284,16 +284,19 @@ export const getStoryByIdController = async (req, res) => {
 export const deleteStoryById = async (req, res) => {
   const { storyId } = req.params;
   const story = await Story.findById(storyId);
-
   if (!story) {
     throw createHttpError(404, 'Story not found');
-    } else if (!story.ownerId.equals(req.user._id)) {
+  }
+  if (!story.ownerId.equals(req.user._id)) {
     throw createHttpError(403, 'You are not the owner of this story');
-  } else {
-    await Story.findByIdAndDelete(storyId);
-    res.status(200).json({
-      status: 200,
-      message: 'Story deleted successfully',
-    });
-  } 
+  }
+  await User.updateMany(
+    { savedArticles: storyId }, 
+    { $pull: { savedArticles: storyId } }
+  );
+  await Story.findByIdAndDelete(storyId);
+  res.status(200).json({
+    status: 200,
+    message: 'Story deleted successfully and removed from saved collections',
+  });
 };

@@ -4,7 +4,6 @@ import { Story } from '../models/story.js';
 import { saveFileToCloudinary } from '../services/cloudinaryService.js';
 import { User } from '../models/user.js';
 import { getStoryByIdService } from '../services/stories.js';
-import mongoose from 'mongoose';
 
 
 export const getStories = async (req, res) => {
@@ -256,16 +255,9 @@ export const getPopularStories = async (req, res) => {
 
 export const getStoryByIdController = async (req, res) => {
   try {
-    const { _id } = req.params;
-    
-     if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
-      return res.status(400).json({
-        status: 400,
-        message: "Invalid story id",
-      });
-    }
+    const { storyId } = req.params;
 
-    const story = await getStoryByIdService(_id);
+    const story = await getStoryByIdService(storyId);
 
     if (!story) {
       return res.status(404).json({

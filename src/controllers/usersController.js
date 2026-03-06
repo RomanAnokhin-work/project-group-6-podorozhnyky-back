@@ -82,18 +82,19 @@ export const updateCurrentUserController = async (req, res) => {
 };
 
 export const getUserById = async (req, res) => {
-  const { userId } = req.params;
+  const { _id } = req.params;
+  
 
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
     throw createHttpError(400, 'Invalid user ID');
   }
 
-  const user = await User.findById(userId);
+  const user = await User.findById(_id);
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
-  const articles = await Story.find({ ownerId: userId })
+  const articles = await Story.find({ ownerId: _id })
     .sort({
       createdAt: -1,
     })
